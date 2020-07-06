@@ -2349,49 +2349,49 @@ downloadfiles() {
         fi
     fi
     dots "Copying binaries to destination paths"
-    cp -vf ${copypath}bzImage ${webdirdest}/service/ipxe/ >>$workingdir/error_logs/fog_error_${version}.log 2>&1 || errorStat $?
-    cp -vf ${copypath}bzImage32 ${webdirdest}/service/ipxe/ >>$workingdir/error_logs/fog_error_${version}.log 2>&1 || errorStat $?
-    cp -vf ${copypath}init.xz ${webdirdest}/service/ipxe/ >>$workingdir/error_logs/fog_error_${version}.log 2>&1 || errorStat $?
-    cp -vf ${copypath}init_32.xz ${webdirdest}/service/ipxe/ >>$workingdir/error_logs/fog_error_${version}.log 2>&1 || errorStat $?
-    if [[ $armsupport == 1 ]]; then
-        cp -vf ${copypath_arm}arm_Image ${webdirdest}/service/ipxe/ >>$workingdir/error_logs/fog_error_${version}.log 2>&1 || errorStat $?
-        cp -vf ${copypath_arm}arm_init.cpio.gz ${webdirdest}/service/ipxe/ >>$workingdir/error_logs/fog_error_${version}.log 2>&1 || errorStat $?
-    fi
-    cp -vf ${copypath}FOGService.msi ${copypath}SmartInstaller.exe ${webdirdest}/client/ >>$workingdir/error_logs/fog_error_${version}.log 2>&1
-    errorStat $?
-    cd $cwd
-}
-configureDHCP() {
-    case $linuxReleaseName in
-        *[Dd][Ee][Bb][Ii][Aa][Nn]*)
-            if [[ $bldhcp -eq 1 ]]; then
-                dots "Setting up and starting DHCP Server (incl. debian 9 fix)"
-                sed -i.fog "s/INTERFACESv4=\"\"/INTERFACESv4=\"$interface\"/g" /etc/default/isc-dhcp-server
-            else
-                dots "Setting up and starting DHCP Server"
-            fi
-            ;;
-        *)
-            dots "Setting up and starting DHCP Server"
-            ;;
-    esac
-    case $bldhcp in
-        1)
-            [[ -f $dhcpconfig ]] && cp -f $dhcpconfig ${dhcpconfig}.fogbackup
-            serverip=$(ip -4 -o addr show $interface | awk -F'([ /])+' '/global/ {print $4}')
-            [[ -z $serverip ]] && serverip=$(/sbin/ifconfig $interface | grep -oE 'inet[:]? addr[:]?([0-9]{1,3}\.){3}[0-9]{1,3}' | awk -F'(inet[:]? ?addr[:]?)' '{print $2}')
-            [[ -z $submask ]] && submask=$(cidr2mask $(getCidr $interface))
-            network=$(mask2network $serverip $submask)
-            [[ -z $startrange ]] && startrange=$(addToAddress $network 10)
-            [[ -z $endrange ]] && endrange=$(subtract1fromAddress $(echo $(interface2broadcast $interface)))
-            [[ -f $dhcpconfig ]] && dhcptouse=$dhcpconfig
-            [[ -f $dhcpconfigother ]] && dhcptouse=$dhcpconfigother
-            if [[ -z $dhcptouse || ! -f $dhcptouse ]]; then
-                echo "Failed"
-                echo "Could not find dhcp config file"
-                exit 1
-            fi
-            [[ -z $bootfilename ]] && bootfilename="undionly.kpxe"
+#    cp -vf ${copypath}bzImage ${webdirdest}/service/ipxe/ >>$workingdir/error_logs/fog_error_${version}.log 2>&1 || errorStat $?
+#    cp -vf ${copypath}bzImage32 ${webdirdest}/service/ipxe/ >>$workingdir/error_logs/fog_error_${version}.log 2>&1 || errorStat $?
+#    cp -vf ${copypath}init.xz ${webdirdest}/service/ipxe/ >>$workingdir/error_logs/fog_error_${version}.log 2>&1 || errorStat $?
+#    cp -vf ${copypath}init_32.xz ${webdirdest}/service/ipxe/ >>$workingdir/error_logs/fog_error_${version}.log 2>&1 || errorStat $?
+#    if [[ $armsupport == 1 ]]; then
+#        cp -vf ${copypath_arm}arm_Image ${webdirdest}/service/ipxe/ >>$workingdir/error_logs/fog_error_${version}.log 2>&1 || errorStat $?
+#        cp -vf ${copypath_arm}arm_init.cpio.gz ${webdirdest}/service/ipxe/ >>$workingdir/error_logs/fog_error_${version}.log 2>&1 || errorStat $?
+#    fi
+#    cp -vf ${copypath}FOGService.msi ${copypath}SmartInstaller.exe ${webdirdest}/client/ >>$workingdir/error_logs/fog_error_${version}.log 2>&1
+#    errorStat $?
+#    cd $cwd
+#}
+#configureDHCP() {
+#    case $linuxReleaseName in
+#        *[Dd][Ee][Bb][Ii][Aa][Nn]*)
+#            if [[ $bldhcp -eq 1 ]]; then
+#                dots "Setting up and starting DHCP Server (incl. debian 9 fix)"
+#                sed -i.fog "s/INTERFACESv4=\"\"/INTERFACESv4=\"$interface\"/g" /etc/default/isc-dhcp-server
+#            else
+#                dots "Setting up and starting DHCP Server"
+#            fi
+#            ;;
+#        *)
+#            dots "Setting up and starting DHCP Server"
+#            ;;
+#    esac
+#    case $bldhcp in
+#        1)
+#            [[ -f $dhcpconfig ]] && cp -f $dhcpconfig ${dhcpconfig}.fogbackup
+#            serverip=$(ip -4 -o addr show $interface | awk -F'([ /])+' '/global/ {print $4}')
+#            [[ -z $serverip ]] && serverip=$(/sbin/ifconfig $interface | grep -oE 'inet[:]? addr[:]?([0-9]{1,3}\.){3}[0-9]{1,3}' | awk -F'(inet[:]? ?addr[:]?)' '{print $2}')
+#            [[ -z $submask ]] && submask=$(cidr2mask $(getCidr $interface))
+#            network=$(mask2network $serverip $submask)
+#            [[ -z $startrange ]] && startrange=$(addToAddress $network 10)
+#            [[ -z $endrange ]] && endrange=$(subtract1fromAddress $(echo $(interface2broadcast $interface)))
+#            [[ -f $dhcpconfig ]] && dhcptouse=$dhcpconfig
+#            [[ -f $dhcpconfigother ]] && dhcptouse=$dhcpconfigother
+#            if [[ -z $dhcptouse || ! -f $dhcptouse ]]; then
+#                echo "Failed"
+#                echo "Could not find dhcp config file"
+#                exit 1
+#            fi
+#            [[ -z $bootfilename ]] && bootfilename="undionly.kpxe"
             echo "# DHCP Server Configuration file\n#see /usr/share/doc/dhcp*/dhcpd.conf.sample" > $dhcptouse
             echo "# This file was created by FOG" >> "$dhcptouse"
             echo "#Definition of PXE-specific options" >> "$dhcptouse"
