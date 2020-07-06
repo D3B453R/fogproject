@@ -2349,49 +2349,49 @@ downloadfiles() {
     [[ ! -d ../tmp/ ]] && mkdir -p ../tmp/ >/dev/null 2>&1
     cwd=$(pwd)
     cd ../tmp/
-    if [[ $version =~ ^[0-9]\.[0-9]\.[0-9]$ ]]
-    then
-        urls=( "https://fogproject.org/binaries${version}.zip" )
-        if [[ $armsupport == 1 ]]; then
-            urls+=( "https://fogproject.org/binaries${version}_arm.zip" )
-        fi
-    else
-        clientVer="$(awk -F\' /"define\('FOG_CLIENT_VERSION'[,](.*)"/'{print $4}' ../packages/web/lib/fog/system.class.php | tr -d '[[:space:]]')"
-        urls=( "https://fogproject.org/inits/init.xz" "https://fogproject.org/inits/init_32.xz" "https://fogproject.org/kernels/bzImage" "https://fogproject.org/kernels/bzImage32" "https://github.com/FOGProject/fog-client/releases/download/${clientVer}/FOGService.msi" "https://github.com/FOGProject/fog-client/releases/download/${clientVer}/SmartInstaller.exe" )
-        if [[ $armsupport == 1 ]]; then
-            urls+=( "https://fogproject.org/inits/arm_init.cpio.gz" "https://fogproject.org/kernels/arm_Image" )
-        fi
-    fi
-    for url in "${urls[@]}"
-    do
-        checksum=1
-        cnt=0
-        filename=$(basename -- "$url")
-        hashfile="${filename}.sha256"
-        baseurl=$(dirname -- "$url")
-        hashurl="${baseurl}/${hashfile}"
-        # make sure we download the most recent hash file to start with
-        if [[ -f $hashfile ]]; then
-            rm -f $hashfile
-            curl --silent -kOL $hashurl >>$workingdir/error_logs/fog_error_${version}.log 2>&1
-        fi
-        while [[ $checksum -ne 0 && $cnt -lt 10 ]]
-        do
-            [[ -f $hashfile ]] && sha256sum --check $hashfile >>$workingdir/error_logs/fog_error_${version}.log 2>&1
-            checksum=$?
-            if [[ $checksum -ne 0 ]]
-            then
-                curl --silent -kOL $url >>$workingdir/error_logs/fog_error_${version}.log 2>&1
-                curl --silent -kOL $hashurl >>$workingdir/error_logs/fog_error_${version}.log 2>&1
-            fi
-            let cnt+=1
-        done
-        if [[ $checksum -ne 0 ]]
-        then
-            echo " * Could not download $filename properly"
-            [[ -z $exitFail ]] && exit 1
-        fi
-    done
+#    if [[ $version =~ ^[0-9]\.[0-9]\.[0-9]$ ]]
+#    then
+#        urls=( "https://fogproject.org/binaries${version}.zip" )
+#        if [[ $armsupport == 1 ]]; then
+#            urls+=( "https://fogproject.org/binaries${version}_arm.zip" )
+#        fi
+#    else
+#        clientVer="$(awk -F\' /"define\('FOG_CLIENT_VERSION'[,](.*)"/'{print $4}' ../packages/web/lib/fog/system.class.php | tr -d '[[:space:]]')"
+#        urls=( "https://fogproject.org/inits/init.xz" "https://fogproject.org/inits/init_32.xz" "https://fogproject.org/kernels/bzImage" "https://fogproject.org/kernels/bzImage32" "https://github.com/FOGProject/fog-client/releases/download/${clientVer}/FOGService.msi" "https://github.com/FOGProject/fog-client/releases/download/${clientVer}/SmartInstaller.exe" )
+#        if [[ $armsupport == 1 ]]; then
+#            urls+=( "https://fogproject.org/inits/arm_init.cpio.gz" "https://fogproject.org/kernels/arm_Image" )
+#        fi
+#    fi
+#    for url in "${urls[@]}"
+#    do
+#        checksum=1
+#        cnt=0
+#        filename=$(basename -- "$url")
+#        hashfile="${filename}.sha256"
+#        baseurl=$(dirname -- "$url")
+#        hashurl="${baseurl}/${hashfile}"
+#        # make sure we download the most recent hash file to start with
+#        if [[ -f $hashfile ]]; then
+#            rm -f $hashfile
+#            curl --silent -kOL $hashurl >>$workingdir/error_logs/fog_error_${version}.log 2>&1
+#        fi
+#        while [[ $checksum -ne 0 && $cnt -lt 10 ]]
+#        do
+#            [[ -f $hashfile ]] && sha256sum --check $hashfile >>$workingdir/error_logs/fog_error_${version}.log 2>&1
+#            checksum=$?
+#            if [[ $checksum -ne 0 ]]
+#            then
+#                curl --silent -kOL $url >>$workingdir/error_logs/fog_error_${version}.log 2>&1
+#                curl --silent -kOL $hashurl >>$workingdir/error_logs/fog_error_${version}.log 2>&1
+#            fi
+#            let cnt+=1
+#        done
+#        if [[ $checksum -ne 0 ]]
+#        then
+#            echo " * Could not download $filename properly"
+#            [[ -z $exitFail ]] && exit 1
+#        fi
+#    done
     echo "Done"
     if [[ $version =~ ^[0-9]\.[0-9]\.[0-9]$ ]]
     then
