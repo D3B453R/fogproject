@@ -259,25 +259,6 @@ class AddSiteHost extends Hook
             );
             $sID = array_shift($Sites);
         }
-        $UserIsRestricted = self::getSubObjectIDs(
-            'SiteUserRestriction',
-            array('userID' => self::$FOGUser->get('id')),
-            'isRestricted'
-        )[0];
-        if ($UserIsRestricted == 1) {
-            $SitesFiltered = array_diff(
-                self::getSubObjectIDs(
-                    'Site',
-                    '',
-                    'id'
-                ),
-                self::getSubObjectIDs(
-                    'SiteUserAssociation',
-                    array('userID' => self::$FOGUser->get('id')),
-                    'siteID'
-                )
-            );
-        }
         self::arrayInsertAfter(
             '<label for="productKey">'
             . _('Host Product Key')
@@ -287,10 +268,7 @@ class AddSiteHost extends Hook
             . _('Host Site')
             . '</label>',
             self::getClass('SiteManager')->buildSelectBox(
-                $sID,
-                '',
-                'name',
-                $SitesFiltered
+                $sID
             )
         );
     }
@@ -324,18 +302,12 @@ class AddSiteHost extends Hook
         if (!in_array($sub, $subs)) {
             return;
         }
-
-        $mac = trim(filter_input(INPUT_POST, 'mac'));
-
         if (str_replace('_', '-', $tab) != 'host-general') {
-            self::getClass('HostManager')->getHostByMacAddresses($mac);
-            $hostID = self::$Host->get('id');
-        } else {
-            $hostID = $arguments['Host']->get('id');
+            return;
         }
         self::getClass('SiteHostAssociationManager')->destroy(
             array(
-                'hostID' => $hostID
+                'hostID' => $arguments['Host']->get('id')
             )
         );
         $site = (int)filter_input(INPUT_POST, 'site');
@@ -347,7 +319,7 @@ class AddSiteHost extends Hook
             $insert_values = array();
             $insert_values[] = array(
                 $site,
-                $hostID
+                $arguments['Host']->get('id')
             );
             if (count($insert_values)) {
                 self::getClass('SiteHostAssociationManager')
@@ -371,11 +343,11 @@ class AddSiteHost extends Hook
             return;
         }
         if (!in_array('accesscontrol', (array)self::$pluginsinstalled)) {
-            $insertIndex = 4;
-        } else {
             $insertIndex = 5;
+        } else {
+            $insertIndex = 6;
         }
-        self::getClass('SiteHostAssociation')
+        self::getClass('SiteHostAssociationManager')
             ->set('hostID', $argumetns['Host']->get('id'))
             ->load('hostID')
             ->set('siteID', $arguments['data'][$insertIndex])

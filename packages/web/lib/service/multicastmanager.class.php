@@ -124,15 +124,10 @@ class MulticastManager extends FOGService
      */
     private static function _getMCExistingTask(
         $KnownTasks,
-        $curTask
+        $id
     ) {
         foreach ((array)$KnownTasks as &$Known) {
-            if ($Known->getID() == $curTask->getID()) {
-                // This is very important for MC session joins via PXE menu
-                $curTaskTaskIDs = $curTask->getTaskIDs();
-                if (count($curTaskTaskIDs) > count($Known->getTaskIDs())) {
-                    $Known->setTaskIDs($curTaskTaskIDs);
-                }
+            if ($Known->getID() == $id) {
                 return $Known;
             }
             unset($Known);
@@ -326,7 +321,7 @@ class MulticastManager extends FOGService
                                         _('failed to start')
                                     )
                                 );
-                                if (!$curTask->killTask()) {
+                                if (!$curTask->kilTask()) {
                                     self::outall(
                                         sprintf(
                                             $startStr,
@@ -416,7 +411,7 @@ class MulticastManager extends FOGService
 
                         $runningTask = self::_getMCExistingTask(
                             $KnownTasks,
-                            $curTask
+                            $curTask->getID()
                         );
 
                         if ($groupOpenSlots > 0 && !$runningTask->isRunning($runningTask->procRef)) {
@@ -430,7 +425,7 @@ class MulticastManager extends FOGService
                                     )
                                 );
 
-                                if (!$curTask->killTask()) {
+                                if (!$curTask->kilTask()) {
                                     self::outall(
                                         sprintf(
                                             $startStr,
@@ -573,7 +568,7 @@ class MulticastManager extends FOGService
                             $jobcancelled = true;
                         }
                         if ($SessCompleted
-                            || (count($inTaskCompletedIDs) > 0 && count($inTaskCompletedIDs) >= count($taskIDs))
+                            || count($inTaskCompletedIDs) > 0
                             || ($runningTask->isNamedSession()
                             && $runningTask->getSessClients())
                         ) {

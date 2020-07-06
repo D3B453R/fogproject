@@ -142,7 +142,7 @@ class LDAP extends FOGController
             )
         );
         $port = $this->get('port');
-        $address = preg_replace('#^.*://#i', '', $this->get('address'));
+        $address = $this->get('address');
         if (!in_array($port, $ports)) {
             throw new Exception(_('Port is not valid ldap/ldaps port'));
         }
@@ -161,7 +161,7 @@ class LDAP extends FOGController
             '%s%s://%s',
             $ldap,
             (
-                in_array($port, [ 636, 686, 3269, 7636 ]) ?
+                $port == 636 ?
                 's' :
                 ''
             ),
