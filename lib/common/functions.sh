@@ -2388,31 +2388,31 @@ downloadfiles() {
 #            [[ -z $exitFail ]] && exit 1
 #        fi
 #    done
-    echo "Done"
-    if [[ $version =~ ^[0-9]\.[0-9]\.[0-9]$ ]]
-    then
-        dots "Extracting the binaries archive"
-        unzip -o binaries${version}.zip >>$workingdir/error_logs/fog_error_${version}.log 2>&1
-        errorStat $?
-        copypath="packages/*/"
-        if [[ $armsupport == 1 ]]; then
-            dots "Extracting the ARM binaries archive"
-            unzip -o binaries${version}_arm.zip >>$workingdir/error_logs/fog_error_${version}.log 2>&1
-            errorStat $?
-            copypath_arm="packages_arm/*/"
-        fi
-    fi
-    dots "Copying binaries to destination paths"
-    cp -vf ${copypath}bzImage ${webdirdest}/service/ipxe/ >>$workingdir/error_logs/fog_error_${version}.log 2>&1 || errorStat $?
-    cp -vf ${copypath}bzImage32 ${webdirdest}/service/ipxe/ >>$workingdir/error_logs/fog_error_${version}.log 2>&1 || errorStat $?
-    cp -vf ${copypath}init.xz ${webdirdest}/service/ipxe/ >>$workingdir/error_logs/fog_error_${version}.log 2>&1 || errorStat $?
-    cp -vf ${copypath}init_32.xz ${webdirdest}/service/ipxe/ >>$workingdir/error_logs/fog_error_${version}.log 2>&1 || errorStat $?
-    if [[ $armsupport == 1 ]]; then
-        cp -vf ${copypath_arm}arm_Image ${webdirdest}/service/ipxe/ >>$workingdir/error_logs/fog_error_${version}.log 2>&1 || errorStat $?
-        cp -vf ${copypath_arm}arm_init.cpio.gz ${webdirdest}/service/ipxe/ >>$workingdir/error_logs/fog_error_${version}.log 2>&1 || errorStat $?
-    fi
-    cp -vf ${copypath}FOGService.msi ${copypath}SmartInstaller.exe ${webdirdest}/client/ >>$workingdir/error_logs/fog_error_${version}.log 2>&1
-    errorStat $?
+#    echo "Done"
+#    if [[ $version =~ ^[0-9]\.[0-9]\.[0-9]$ ]]
+#    then
+#        dots "Extracting the binaries archive"
+#        unzip -o binaries${version}.zip >>$workingdir/error_logs/fog_error_${version}.log 2>&1
+#        errorStat $?
+#        copypath="packages/*/"
+#        if [[ $armsupport == 1 ]]; then
+#            dots "Extracting the ARM binaries archive"
+#            unzip -o binaries${version}_arm.zip >>$workingdir/error_logs/fog_error_${version}.log 2>&1
+#            errorStat $?
+#            copypath_arm="packages_arm/*/"
+#        fi
+#    fi
+#    dots "Copying binaries to destination paths"
+#    cp -vf ${copypath}bzImage ${webdirdest}/service/ipxe/ >>$workingdir/error_logs/fog_error_${version}.log 2>&1 || errorStat $?
+#    cp -vf ${copypath}bzImage32 ${webdirdest}/service/ipxe/ >>$workingdir/error_logs/fog_error_${version}.log 2>&1 || errorStat $?
+#    cp -vf ${copypath}init.xz ${webdirdest}/service/ipxe/ >>$workingdir/error_logs/fog_error_${version}.log 2>&1 || errorStat $?
+#    cp -vf ${copypath}init_32.xz ${webdirdest}/service/ipxe/ >>$workingdir/error_logs/fog_error_${version}.log 2>&1 || errorStat $?
+#    if [[ $armsupport == 1 ]]; then
+#        cp -vf ${copypath_arm}arm_Image ${webdirdest}/service/ipxe/ >>$workingdir/error_logs/fog_error_${version}.log 2>&1 || errorStat $?
+#        cp -vf ${copypath_arm}arm_init.cpio.gz ${webdirdest}/service/ipxe/ >>$workingdir/error_logs/fog_error_${version}.log 2>&1 || errorStat $?
+#    fi
+#    cp -vf ${copypath}FOGService.msi ${copypath}SmartInstaller.exe ${webdirdest}/client/ >>$workingdir/error_logs/fog_error_${version}.log 2>&1
+#    errorStat $?
     cd $cwd
 }
 configureDHCP() {
